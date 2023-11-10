@@ -15,6 +15,7 @@
 .shoppingCartIcon {
   font-size: 30px;
   margin-right: 16px;
+  cursor: pointer;
 }
 
 .pageContent {
@@ -36,4 +37,8 @@
 .itemCardImage {
   height: 150px !important;
   object-fit: scale-down;
+}
+
+.itemDesc {
+  min-height: 44px;
 }

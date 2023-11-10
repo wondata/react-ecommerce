@@ -29,7 +29,7 @@ function Products() {
   }, [param]);
 
   if (loading) {
-    return <Spin spinning={loading} fullscreen />;
+    return <Spin spinning={loading} fullscreen="true" />;
   }
 
   return (
@@ -70,6 +70,7 @@ function Products() {
                   }
                   description={
                     <Typography.Paragraph
+                      className="itemDesc"
                       ellipsis={{ rows: 2, expandable: true, symbol: "more" }}
                     >
                       {product.description}
