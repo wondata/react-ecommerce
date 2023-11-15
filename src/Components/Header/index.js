@@ -1,5 +1,15 @@
 import { HomeFilled, ShoppingCartOutlined } from "@ant-design/icons";
-import { Badge, Button, Drawer, InputNumber, Menu, Table } from "antd";
+import {
+  Badge,
+  Button,
+  Drawer,
+  Form,
+  Input,
+  InputNumber,
+  Menu,
+  Table,
+  message,
+} from "antd";
 import Typography from "antd/es/typography/Typography";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -81,12 +91,20 @@ function AppHeader() {
 
 const AppCart = () => {
   const [cardDrawerOpen, setCardDrawerOpen] = useState(false);
+  const [checkoutDrawerOpen, setCheckoutDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   useEffect(() => {
     getCart().then((cart) => {
       setCartItems(cart.products);
     });
   }, []);
+
+  const onConfirmOrder = (values) => {
+    console.log(values);
+    setCheckoutDrawerOpen(false);
+    setCardDrawerOpen(false);
+    message.success("Your order has been placed successfully.");
+  };
 
   return (
     <>
@@ -161,7 +179,64 @@ const AppCart = () => {
             return <span>Total: {total}</span>;
           }}
         />
-        <Button type="primary">Checkout Your Cart</Button>
+        <Button
+          type="primary"
+          onClick={() => {
+            setCheckoutDrawerOpen(true);
+          }}
+        >
+          Checkout Your Cart
+        </Button>
+      </Drawer>
+      <Drawer
+        open={checkoutDrawerOpen}
+        onClose={() => {
+          setCheckoutDrawerOpen(false);
+        }}
+        title="Checkout"
+      >
+        <Form onFinish={onConfirmOrder}>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please enter your full name",
+              },
+            ]}
+            label="Full Name"
+            name="full_name"
+          >
+            <Input placeholder="Enter Your full name" />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                type: "email",
+                message: "Please enter your email",
+              },
+            ]}
+            label="Email"
+            name="your_email"
+          >
+            <Input placeholder="Enter Your email" />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please enter your address",
+              },
+            ]}
+            label="Address"
+            name="your_address"
+          >
+            <Input placeholder="Enter Your address" />
+          </Form.Item>
+          <Button type="primary" htmlType="submit">
+            Confirm Order
+          </Button>
+        </Form>
       </Drawer>
     </>
   );
