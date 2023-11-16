@@ -26,6 +26,7 @@ function AppHeader() {
   return (
     <div className="appHeader">
       <Menu
+        className="appMenu"
         onClick={onMenuClick}
         mode="horizontal"
         items={[

@@ -10,6 +10,7 @@ import {
   Button,
   message,
   Spin,
+  Select,
 } from "antd";
 import { useParams } from "react-router-dom";
 
@@ -17,6 +18,7 @@ function Products() {
   const param = useParams();
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
+  const [sortOrder, setSortOrder] = useState("az");
   useEffect(() => {
     setLoading(true);
     (param?.categoryId
@@ -28,12 +30,64 @@ function Products() {
     });
   }, [param]);
 
+  const getSortedItems = (selOrder) => {
+    if (selOrder === "az") {
+      const sortedItems = [...items].sort((a, b) =>
+        a.title > b.title ? 1 : -1
+      );
+      setItems(sortedItems);
+      console.log(
+        sortedItems.map((item) => {
+          return item.title;
+        })
+      );
+    } else if (selOrder === "za") {
+      const sortedItems = [...items].sort((a, b) =>
+        a.title > b.title ? -1 : 1
+      );
+      setItems(sortedItems);
+      console.log(
+        sortedItems.map((item) => {
+          return item.title;
+        })
+      );
+    }
+  };
+
   if (loading) {
     return <Spin spinning={loading} fullscreen="true" />;
   }
 
   return (
     <div>
+      <div className="sortContainer">
+        <Typography.Text>View Items Sorted By:</Typography.Text>
+        <Select
+          onChange={(value) => {
+            setSortOrder(value);
+            getSortedItems(value);
+          }}
+          options={[
+            {
+              label: "Alphabetically a-z",
+              value: "az",
+            },
+            {
+              label: "Alphabetically z-a",
+              value: "za",
+            },
+            {
+              label: "Price Low to High",
+              value: "lowHigh",
+            },
+            {
+              label: "Price High to Low",
+              value: "highLow",
+            },
+          ]}
+          defaultValue="az"
+        ></Select>
+      </div>
       <List
         grid={{ column: 3 }}
         renderItem={(product, index) => {
