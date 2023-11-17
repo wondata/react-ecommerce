@@ -30,33 +30,32 @@ function Products() {
     });
   }, [param]);
 
-  const getSortedItems = (selOrder) => {
-    if (selOrder === "az") {
-      const sortedItems = [...items].sort((a, b) =>
-        a.title > b.title ? 1 : -1
-      );
-      setItems(sortedItems);
-      console.log(
-        sortedItems.map((item) => {
-          return item.title;
-        })
-      );
-    } else if (selOrder === "za") {
-      const sortedItems = [...items].sort((a, b) =>
-        a.title > b.title ? -1 : 1
-      );
-      setItems(sortedItems);
-      console.log(
-        sortedItems.map((item) => {
-          return item.title;
-        })
-      );
-    }
-  };
+  const getSortedItems = () => {
+    const sortedItems = [...items];
+    sortedItems.sort((a, b) => {
+      const aLowerCaseTitle = a.title.toLowerCase();
+      const bLowerCaseTitle = b.title.toLowerCase();
+      if (sortOrder === "az") {
+        return aLowerCaseTitle > bLowerCaseTitle
+          ? 1
+          : aLowerCaseTitle === bLowerCaseTitle
+          ? 0
+          : -1;
+      } else if (sortOrder === "za") {
+        return aLowerCaseTitle < bLowerCaseTitle
+          ? 1
+          : aLowerCaseTitle === bLowerCaseTitle
+          ? 0
+          : -1;
+      } else if (sortOrder === "lowHigh") {
+        return a.price > b.price ? 1 : a.price === b.price ? 0 : -1;
+      } else if (sortOrder === "highLow") {
+        return a.price < b.price ? 1 : a.price === b.price ? 0 : -1;
+      }
+    });
 
-  if (loading) {
-    return <Spin spinning={loading} fullscreen="true" />;
-  }
+    return sortedItems;
+  };
 
   return (
     <div>
@@ -65,7 +64,6 @@ function Products() {
         <Select
           onChange={(value) => {
             setSortOrder(value);
-            getSortedItems(value);
           }}
           options={[
             {
@@ -89,12 +87,13 @@ function Products() {
         ></Select>
       </div>
       <List
+        loading={loading}
         grid={{ column: 3 }}
         renderItem={(product, index) => {
           return (
             <Badge.Ribbon
               className="itemCardBadge"
-              text={product.discountPercentage}
+              text={`${product.discountPercentage}% Off`}
               color="pink"
             >
               <Card
@@ -135,7 +134,7 @@ function Products() {
             </Badge.Ribbon>
           );
         }}
-        dataSource={items}
+        dataSource={getSortedItems()}
       ></List>
     </div>
   );

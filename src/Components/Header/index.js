@@ -110,7 +110,7 @@ const AppCart = () => {
   return (
     <>
       <Badge
-        count={7}
+        count={cartItems.length}
         className="shoppingCartIcon"
         onClick={() => {
           setCardDrawerOpen(true);
